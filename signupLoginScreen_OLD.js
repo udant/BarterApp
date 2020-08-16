@@ -1,7 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Alert, View,TouchableOpacity,TextInput,KeyboardAvoidingView,Modal,ScrollView} from 'react-native';
-import db from '../config' ;
-import firebase from 'firebase'; 
+import { StyleSheet, Text, View,TouchableOpacity,TextInput,KeyboardAvoidingView} from 'react-native';
 
 export default class SignupLoginScreen extends React.Component {
     constructor(){
@@ -9,51 +7,36 @@ export default class SignupLoginScreen extends React.Component {
         this.state={
             email:'',
             password:'',
-            isModalVisible:true
         }
     }
     userLogin=(email,password)=>{
       firebase.auth().signInWithEmailAndPassword(email,password)
       .then(()=>{
           return (Alert.alert("successful login"),
-          this.props.navigation.navigate('Donate'),
-          this.setState({
-            email: ''
-          })
+          this.props.navigation.navigate('Donate')
           )    
       })
       .catch((error)=>{
           var errorCode = error.code;
           var errorMessage = error.message;
-          return (
-            Alert.alert(errorMessage)
-            
-            )   
+          return Alert.alert(errorMessage)    
       })
   }
   userSignup=(email,password)=>{
       firebase.auth().createUserWithEmailAndPassword(email,password)
       .then((response)=>{
           return Alert.alert("user added successfully")    
-          
       })
       .catch(function (error){
           var errorCode = error.code;
           var errorMessage = error.message;
-          return (
-            Alert.alert(errorMessage),
-            console.log("email",email),
-            console.log("password",password)
-            )  
+          return Alert.alert(errorMessage)    
       })
   }   
   showModal = ()=>{
     return(
-      this.setState({
-        isModalVisible:true
-      }),
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={this.state.isModalVisible}
       >
@@ -133,7 +116,7 @@ export default class SignupLoginScreen extends React.Component {
             }}
           />
           <View style={styles.modalBackButton}>
-             <TouchableOpacity
+            <TouchableOpacity
               style={styles.registerButton}
               onPress={()=>
                 this.userSignUp(this.state.emailId, this.state.password, this.state.confirmPassword)
@@ -147,24 +130,22 @@ export default class SignupLoginScreen extends React.Component {
               style={styles.cancelButton}
               onPress={()=>this.setState({"isModalVisible":false})}
             >
-              
             <Text style={{color:'#ff5722'}}>Cancel</Text>
             </TouchableOpacity>
           </View>
           </KeyboardAvoidingView>
         </ScrollView>
       </View>
-    </Modal>,
-     Alert.alert("Show model executed")
+    </Modal>
   )
   }
-
-  render(){   
+ render(){   
   return (
     <View style={styles.container}>
-       
-        <TextInput 
-                style={styles.loginBox}
+      <View>  
+        <TouchableOpacity/>
+        <TextInput
+                placeholder ={"Email"}
                 keyboardType={'email-address'}
                 onChangeText={(text)=>{
                   this.setState({
@@ -172,8 +153,8 @@ export default class SignupLoginScreen extends React.Component {
                   })
                 }}
               />
-         <TextInput 
-                style={styles.loginBox}
+         <TextInput
+                placeholder ={"Password"}
                 secureTextEntry = {true}
                 onChangeText={(text)=>{
                   this.setState({
@@ -181,14 +162,10 @@ export default class SignupLoginScreen extends React.Component {
                   })
                 }}
               />  
-               
-              
-        <View >  
-          <TouchableOpacity
-             style={[styles.button,{marginBottom:20, marginTop:90}]}
+           <TouchableOpacity
+             style={[styles.button,{marginBottom:20, marginTop:20}]}
              onPress = {()=>{
-               console.log(this.state.email, this.state.password)
-               this.userLogin(this.state.email, this.state.password)
+               this.userLogin(this.state.emailId, this.state.password)
              }}
              >
              <Text style={styles.buttonText}>Login</Text>
@@ -196,69 +173,25 @@ export default class SignupLoginScreen extends React.Component {
   
            <TouchableOpacity
              style={styles.button}
-             onPress={()=>{
-              this.showModal();
-              Alert.alert("I  m displayed");
-              this.setState({ isModalVisible:true});
-              this.userSignup(this.state.email, this.state.password);
-             
-              }}
+             onPress={()=>this.setState({ isModalVisible:true})}
              >
              <Text style={styles.buttonText}>SignUp</Text>
            </TouchableOpacity>  
-           </View> 
-           
+           </View>  
     </View>
   );
  }
 }
 
 const styles = StyleSheet.create({
-  container:{ 
-    flex:1,
-    backgroundColor:'#fff' ,
-    padding:8,
-    paddingTop:10
-  }, 
-  profileContainer:{ 
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center',
-   }, 
-  loginBox:{ 
-    marginTop:70,
-    width: 300, 
-    height: 40,
-    alignSelf:'center',
-    borderColor : '#ff8a65', 
-    fontSize: 20,
-    margin:10,
-    paddingLeft:70 ,
-  
-    borderWidth:  3
-  }, 
-  button:{ 
-    width:300, 
-    marginLeft:50,
-    height:40, 
-    justifyContent:'center', 
-    alignItems:'center', 
-    alignSelf:'center',
-    borderRadius:0, 
-    backgroundColor:"#f8aa00", 
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8, }, 
-    shadowOpacity: 0.30, 
-    shadowRadius: 10.32, 
-    elevation: 16, 
+  container:{ flex:1, backgroundColor:'#F8BE85' }, 
+  profileContainer:{ flex:1, justifyContent:'center', alignItems:'center', }, 
+  title :{ fontSize:65, fontWeight:'300', paddingBottom:30, color : '#ff3d00' }, 
+  loginBox:{ width: 300, height: 40, borderBottomWidth: 1.5, borderColor : '#ff8a65', fontSize: 20,
+      margin:10, paddingLeft:10 }, button:{ width:300, height:50, justifyContent:'center', 
+       alignItems:'center', borderRadius:25, backgroundColor:"#ff9800", shadowColor: "#000",
+       shadowOffset: { width: 0, height: 8, }, shadowOpacity: 0.30, shadowRadius: 10.32, elevation: 16, 
   },
-  buttonText:{ 
-    color:'#ffff', 
-    fontWeight:'200', 
-    fontSize:20 
-  },
-  buttonContainer:{ 
-    flex:1, 
-    alignItems:'center' 
-  }
+  buttonText:{ color:'#ffff', fontWeight:'200', fontSize:20 },
+  buttonContainer:{ flex:1, alignItems:'center' }
 });
