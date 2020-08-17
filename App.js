@@ -21,11 +21,11 @@ export default function App() {
     </View>
   );
 }
-const BottomTabNavigator=createBottomTabNavigator({
+export default switchNavigator=createSwitchNavigator({
   Home:{screen:HomeScreen},
   Exchange:{screen:ExchangeScreen}
 })
-const AppContainer = createAppContainer(BottomTabNavigator)
+const AppContainer = createAppContainer(switchNavigator)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
